@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Home - Customer Support System</title>
+    </head>
+
+    <body>
+        <h1>Welcome to Customer Support System</h1>
+    
+        {% if user.is_authenticated %}
+          <p>Welcome, {{ user.username }}!</p>
+          <a href="{% url 'logout' %}">Logout</a>
+        {% else %}
+          <a href="{% url 'login' %}">Login</a>
+        {% endif %}
+    
+        <br><br>
+    
+        <a href="{% url 'submit_case' %}">Submit New Case</a> |
+        <a href="{% url 'case_list' %}">View All Cases</a>
+    </body>
+</html>

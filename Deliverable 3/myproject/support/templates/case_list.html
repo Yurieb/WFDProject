@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Support Cases</title>
+    </head>
+
+    <body>
+        <h1>All Support Cases</h1>
+        <ul>
+            {% for case in cases %}
+                <li>
+                    <strong>{{ case.subject }}</strong><br>
+                    {{ case.description }}<br>
+                    Status: {{ case.status }}
+                </li>
+            {% empty %}
+                <li>No support cases submitted yet.</li>
+            {% endfor %}
+        </ul>
+    </body>
+</html>
