@@ -1,6 +1,10 @@
 from django.shortcuts import render, redirect
 from .forms import SupportCaseForm
 from .models import SupportCase
+from .models import Profile
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
+
 
 # View for Homepage
 def home(request):
@@ -25,4 +29,17 @@ def submit_case(request):
 def case_list(request):
     cases = SupportCase.objects.all()
     return render(request, 'case_list.html', {'cases': cases})
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            # Create a Profile automatically
+            Profile.objects.create(user=user, role='Customer')  # Default to Customer
+            login(request, user)
+            return redirect('home')  
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/register.html', {'form': form})
 
