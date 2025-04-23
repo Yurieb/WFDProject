@@ -1,0 +1,11 @@
+<h2>Assign Agent to Case: {{ case.subject }}</h2>
+
+<form method="post">
+  {% csrf_token %}
+  <select name="agent_id">
+    {% for agent in agents %}
+      <option value="{{ agent.id }}">{{ agent.username }}</option>
+    {% endfor %}
+  </select>
+  <button type="submit">Assign</button>
+</form>

@@ -1,0 +1,17 @@
+<h1>Manager Dashboard</h1>
+
+<ul>
+  {% for case in cases %}
+    <li>
+      <strong>{{ case.subject }}</strong><br>
+      {{ case.description }}<br>
+      Status: {{ case.status }}<br>
+      Customer: {{ case.customer.username }}<br>
+      {% if case.agent %}
+        Assigned Agent: {{ case.agent.username }}
+      {% else %}
+        <a href="{% url 'assign_agent' case.id %}">Assign Agent</a>
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>

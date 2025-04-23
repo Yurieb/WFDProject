@@ -4,19 +4,22 @@
         <meta charset="UTF-8">
         <title>Support Cases</title>
     </head>
-
     <body>
-        <h1>All Support Cases</h1>
-        <ul>
-            {% for case in cases %}
-                <li>
-                    <strong>{{ case.subject }}</strong><br>
-                    {{ case.description }}<br>
-                    Status: {{ case.status }}
-                </li>
-            {% empty %}
-                <li>No support cases submitted yet.</li>
-            {% endfor %}
-        </ul>
+        <h2>Support Cases</h2>
+    <ul>
+        {% for case in cases %}
+            <li>
+                <strong>{{ case.subject }}</strong> - Status: {{ case.status }}<br>
+                {% if user.profile.role == 'Customer' and case.status == 'closed' %}
+                    <a href="{% url 'give_feedback' case.id %}">Give Feedback</a>
+                {% elif user.profile.role == 'Agent' and case.status == 'open' %}
+                    <a href="{% url 'add_response' case.id %}">Add Response</a>
+                {% endif %}
+            </li><br>
+        {% empty %}
+            <li>No cases to display.</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'home' %}">Back to Home</a>
     </body>
 </html>

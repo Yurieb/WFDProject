@@ -10,14 +10,27 @@
     
         {% if user.is_authenticated %}
           <p>Welcome, {{ user.username }}!</p>
-          <a href="{% url 'logout' %}">Logout</a>
-        {% else %}
-          <a href="{% url 'login' %}">Login</a>
-        {% endif %}
-    
-        <br><br>
-    
-        <a href="{% url 'submit_case' %}">Submit New Case</a> |
-        <a href="{% url 'case_list' %}">View All Cases</a>
+
+          <p>Your role: {{ user.profile.role }}</p>
+
+          {% if user.profile.role == 'Customer' %}
+              <a href="{% url 'submit_case' %}">Submit New Case</a> |
+              <a href="{% url 'case_list' %}">View My Cases</a>
+          {% elif user.profile.role == 'Agent' %}
+              <a href="{% url 'case_list' %}">View Assigned Cases</a>
+          {% elif user.profile.role == 'Manager' %}
+              <a href="{% url 'case_list' %}">View All Cases</a>
+          {% endif %}
+  
+          <br /><br />
+        <form action="{% url 'logout' %}" method="post" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+        </form>
+
+      {% else %}
+      <a href="{% url 'login' %}">Login</a> |
+      <a href="{% url 'register' %}">Register</a>
+      {% endif %}
     </body>
 </html>

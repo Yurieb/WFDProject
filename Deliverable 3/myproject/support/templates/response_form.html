@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+    <head><title>Respond to Case</title></head>
+    <body>
+        <h1>Respond to Case</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Submit Response</button>
+        </form>
+    </body>
+</html>
