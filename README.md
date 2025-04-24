@@ -9,11 +9,11 @@ You can try the project live here:
 https://Yurie90.pythonanywhere.com
 
 
-Use these logins to test different roles:
-Role	  Username	Password
-Customer	Yurie   Django15
-Agent	    Paul  	Django15
-Manager	  Adam   	Django15
+Use these logins to test different roles: the password for each one is Django15
+Role	  Username	
+Customer	Yurie   
+Agent	    Paul  	
+Manager	  Adam   	
 Admin	    admin_user   Django15
 
 Log In using one of the sample accounts:
