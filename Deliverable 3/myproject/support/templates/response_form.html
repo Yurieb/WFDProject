@@ -1,12 +1,37 @@
 <!DOCTYPE html>
-<html>
-    <head><title>Respond to Case</title></head>
-    <body>
-        <h1>Respond to Case</h1>
-        <form method="post">
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Respond to Case</title>
+        <!-- Bootstrap for styling -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body class="container py-4">
+        <h1 class="mb-4">Respond to Case</h1>
+
+        <!-- Display case ID -->
+        <div class="alert alert-info">
+            <strong>Order ID:</strong> {{ case.id }}
+        </div>
+
+        <!-- Show case details -->
+        <div class="mb-4 p-3 border rounded bg-light">
+            <p><strong>Subject:</strong> {{ case.subject }}</p>
+            <p><strong>Description:</strong> {{ case.description }}</p>
+            <p><strong>Status:</strong> {{ case.status }}</p>
+        </div>
+
+        <!-- Response form -->
+        <form method="post" class="mb-3">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Submit Response</button>
+            <div class="mb-3">
+                {{ form.as_p }}
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Response</button>
         </form>
+
+        <!-- Navigation link -->
+        <a href="{% url 'case_list' %}" class="btn btn-link">Back to Cases</a>
+
     </body>
 </html>

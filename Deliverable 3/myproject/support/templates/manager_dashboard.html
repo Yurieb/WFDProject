@@ -1,0 +1,44 @@
+<!DOCTYPE html> 
+<html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <title>Manager Dashboard</title>
+  </head>
+  <body>
+
+      <h1>Manager Dashboard</h1>
+
+      <a href="{% url 'home' %}">Back to Home</a><br><br>
+
+     <!-- Loop through all support cases -->
+      {% for case in cases %}
+          <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+              <p><strong>Case:</strong> {{ case.subject }}</p>
+              <p><strong>Order ID:</strong> {{ case.order_id }}</p>
+              <p><strong>Description:</strong> {{ case.description }}</p>
+              <p><strong>Status:</strong> {{ case.status }}</p>
+
+            <!-- Show assigned agent or 'None' if unassigned -->
+              <p><strong>Assigned Agent:</strong> 
+                  {% if case.agent %}
+                      {{ case.agent.username }}
+                  {% else %}
+                      None
+                  {% endif %}
+              </p>
+
+              <!-- Form to assign an agent to this case -->
+              <form method="post" action="{% url 'assign_agent' case.id %}">
+                  {% csrf_token %}
+                  <label for="agent_id">Assign to:</label>
+                  <select name="agent_id" required>
+                      {% for agent in agents %}
+                          <option value="{{ agent.user.id }}">{{ agent.user.username }}</option>
+                      {% endfor %}
+                  </select>
+                  <button type="submit">Assign</button>
+              </form>
+          </div>
+      {% endfor %}
+</body>
+</html>

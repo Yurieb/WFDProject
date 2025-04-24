@@ -11,7 +11,7 @@ from .models import SupportCase, Profile, Response, Feedback
 def home(request):
     return render(request, 'home.html')
 
-
+# Submit a new support case only accessible by logged-in users
 @login_required
 def submit_case(request):
     if request.method == 'POST':
@@ -25,13 +25,7 @@ def submit_case(request):
         form = SupportCaseForm()
     return render(request, 'submit_case.html', {'form': form})
 
-
-@login_required
-def case_list(request):
-    cases = SupportCase.objects.all()
-    return render(request, 'case_list.html', {'cases': cases})
-
-
+# User registration view creates a Customer profile by default
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -44,7 +38,7 @@ def register(request):
         form = UserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
 
-
+# Allow an agent to respond to an open case
 @login_required
 def add_response(request, case_id):
     if request.user.profile.role != 'Agent':
@@ -65,7 +59,7 @@ def add_response(request, case_id):
         form = ResponseForm()
     return render(request, 'response_form.html', {'form': form, 'case': case})
 
-
+# Allow a customer to give feedback after the case is closed
 @login_required
 def give_feedback(request, case_id):
     case = get_object_or_404(SupportCase, id=case_id)
@@ -85,30 +79,38 @@ def give_feedback(request, case_id):
         form = FeedbackForm()
     return render(request, 'feedback_form.html', {'form': form, 'case': case})
 
+# Manager dashboard view
 @login_required
 def manager_dashboard(request):
-    if not request.user.profile.role == 'Manager':
-        raise PermissionDenied("Only managers can access this page.")
-    
-    cases = SupportCase.objects.all().order_by('-created_at')
-    return render(request, 'manager_dashboard.html', {'cases': cases})
+    if not hasattr(request.user, 'profile') or request.user.profile.role != 'Manager':
+        raise PermissionDenied("Only managers can view this page.")
 
+    cases = SupportCase.objects.all().order_by('-created_at')
+    agents = Profile.objects.filter(role='Agent')
+
+    return render(request, 'manager_dashboard.html', {'cases': cases, 'agents': agents})
+
+# Manager assigns an agent to a support case
 @login_required
 def assign_agent(request, case_id):
-    if not request.user.profile.role == 'Manager':
+    if not hasattr(request.user, 'profile') or request.user.profile.role != 'Manager':
         raise PermissionDenied("Only managers can assign agents.")
 
-    case = SupportCase.objects.get(id=case_id)
-    agents = User.objects.filter(profile__role='Agent')
+    case = get_object_or_404(SupportCase, id=case_id)
 
     if request.method == 'POST':
         agent_id = request.POST.get('agent_id')
-        selected_agent = User.objects.get(id=agent_id)
-        case.agent = selected_agent
+        agent = get_object_or_404(User, id=agent_id)
+        case.agent = agent
         case.save()
         return redirect('manager_dashboard')
-    
-    return render(request, 'assign_agent.html', {'case': case, 'agents': agents})
+
+    return redirect('manager_dashboard')
+
+@login_required
+def case_list(request):
+    cases = SupportCase.objects.all()
+    return render(request, 'case_list.html', {'cases': cases})
 
 @login_required
 def case_list(request):
